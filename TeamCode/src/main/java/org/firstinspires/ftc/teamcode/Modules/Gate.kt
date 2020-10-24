@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.Modules
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import org.openftc.revextensions2.ExpansionHubServo
 
-class Cap constructor(Op : OpMode) {
+class Gate constructor(Op : OpMode) {
 
-    val Cap : ExpansionHubServo = Op.hardwareMap.get(ExpansionHubServo::class.java, "cap")
+    val Gate : ExpansionHubServo = Op.hardwareMap.get(ExpansionHubServo::class.java, "Gate")
 
     var down : Boolean = false
 
@@ -14,13 +14,13 @@ class Cap constructor(Op : OpMode) {
     }
 
     fun origin() {
-        Cap.position = 0.0
+        Gate.position = 0.0
 
     }
 
     fun down() {
         down = true
-        Cap.position = 0.7
+        Gate.position = 0.7
 
     }
 

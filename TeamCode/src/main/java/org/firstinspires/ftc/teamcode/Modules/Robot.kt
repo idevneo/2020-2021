@@ -13,28 +13,21 @@ class Robot constructor(val opMode: OpMode) {
     var feedforward : Boolean = false
 
     companion object Modules {
-        //lateinit var cap : Cap
+
         lateinit var driveTrain: DriveTrain
         lateinit var shooter: Shooter
-        //lateinit var foundationHooks: FoundationHooks
-        //lateinit var gantry: Gantry
         lateinit var intake: Intake
-        //lateinit var lift : Lift
-        //lateinit var autoGrabberRight: AutoGrabberRight
-        //lateinit var autoGrabberLeft: AutoGrabberLeft
+        lateinit var wobbleClamp: WobbleClamp
+        lateinit var gate: Gate
+        lateinit var transition: Transition
 
         fun init(Op: OpMode) {
-//            cap = Cap(Op)
             driveTrain = DriveTrain(Op)
             shooter = Shooter(Op)
-//            foundationHooks = FoundationHooks(Op)
-//            gantry = Gantry(Op)
             intake = Intake(Op)
-
-
-//            lift = Lift(Op)
-//            autoGrabberRight = AutoGrabberRight(Op)
-//            autoGrabberLeft = AutoGrabberLeft(Op)
+            wobbleClamp = WobbleClamp(Op)
+            gate = Gate(Op)
+            transition = Transition(Op)
             IMU.init(Op)
         }
     }
@@ -45,7 +38,6 @@ class Robot constructor(val opMode: OpMode) {
     }
 
     fun controls() {
-//        liftControls()
 
 //        g2()
         intakeControls()

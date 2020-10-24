@@ -4,8 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import org.openftc.revextensions2.ExpansionHubServo
 
 class FoundationHooks constructor(Op : OpMode) {
-    val HookLeft : ExpansionHubServo = Op.hardwareMap.get(ExpansionHubServo::class.java, "leftHook")
-    val HookRight : ExpansionHubServo = Op.hardwareMap.get(ExpansionHubServo::class.java, "rightHook")
+    val Gate : ExpansionHubServo = Op.hardwareMap.get(ExpansionHubServo::class.java, "gate")
 
     var down : Boolean = false
 
@@ -14,14 +13,9 @@ class FoundationHooks constructor(Op : OpMode) {
     }
 
     fun origin() {
-        HookLeft.position = 0.33
-        HookRight.position = 0.52
+        Gate.position = 0.33
     }
 
-    fun hook() {
-        HookLeft.position = .5
-        HookRight.position = .52
-    }
 
     fun down() {
         down = true
@@ -30,8 +24,7 @@ class FoundationHooks constructor(Op : OpMode) {
 
     fun up() {
         down = false
-        HookLeft.position = 0.7
-        HookRight.position = 0.15
+        Gate.position = 0.7
     }
 
     fun toggle() {
