@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Modules.Vision
 
 import android.graphics.Bitmap
+import android.graphics.Color.*
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.vuforia.Frame
@@ -17,16 +18,17 @@ import java.util.ArrayList
 import java.util.Collections
 import java.util.concurrent.BlockingQueue
 
-import android.graphics.Color.blue
-import android.graphics.Color.green
-import android.graphics.Color.red
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
+import org.apache.commons.math3.distribution.IntegerDistribution
 
 class NewBitMap constructor(val opMode: OpMode) {
 
 
     // importing vuforia class for taking an image
     lateinit var vuforia: VuforiaLocalizer
+    val RED_THRESHOLD: Int = 200
+    val BLUE_THRESHOLD: Int = 50
+    val GREEN_THRESHOLD: Int = 100
 
 
 
@@ -78,31 +80,16 @@ class NewBitMap constructor(val opMode: OpMode) {
         return getImage().width.toDouble()
     }
 
-
     @Throws(InterruptedException::class)
-    fun blueVision(): String {
+    fun vision(): String {
         val bitmap = getImage()
-        val xValues = ArrayList<Int>()
-        //x : 800
-        //y : 448
+        val yValues = ArrayList<Int>()
 
 
 
+        for (rowNum in 0..bitmap.height) {
 
-        //counters for whether a pixel is gold, otherwise assign it to black
-        var black = 0
-        var gold = 0
-        val left: Int = (200 * .625).toInt()
-        val right: Int = (900 * .625).toInt()
-        val bottom: Int = (110 * .625).toInt()
-        val top: Int = (0 * .625).toInt()
-        //col range 145..830
-        //row range 110..320
-        for (colNum in left..right) {
-
-            // scan rows 120-240 to block out cubes from crater
-            //NEED TO TEST WHICH ROWS TO LOOP THROUGH TO GET MOST EFFICIENT RESULT
-            for (rowNum in top..bottom) {
+            for (colNum in 200..600) {
                 val pixel = bitmap.getPixel(colNum, rowNum)
 
                 // receive R, G, and B values for each pixel
@@ -111,62 +98,45 @@ class NewBitMap constructor(val opMode: OpMode) {
                 val bluePixel = blue(pixel)
 
                 //checking if the pixel meets the thresholds to be assigned a gold value
-                if (redPixel <= 25 && greenPixel <= 25 && bluePixel <= 25) {
-                    black++
-                    xValues.add(colNum)
+                if (redPixel >= RED_THRESHOLD && greenPixel >= GREEN_THRESHOLD && bluePixel <= BLUE_THRESHOLD) {
+
+                    yValues.add(colNum)
                 }
             }
 
         }
 
-        var avgX = 0.0
-        for (x in xValues) {
-            avgX += x
-        }
-//
-        avgX /= xValues.size
-
-
-        //assigning a boolean that determines whether or not the specific frame is black
-        //if there are more black pixels, it is black, otherwise it's gold
-        //BLACK IS TRUE, GOLD IS FALSE
-
-
-        if (avgX <= 220){
-            return "L"
-        } else if (avgX > 220 && avgX <=400){
-            return  "C"
-        } else if (avgX > 400){
-            return "R"
+        var avgY = 0.0
+        for (y in yValues) {
+            avgY += y
         }
 
-        return "C"
+        avgY /= yValues.size
+
+        if (avgY < 160) {
+            return "posC";
+
+        }
+        else if (avgY < 200) {
+            return "posB";
+
+        }
+        else {
+            return "posA";
+
+        }
     }
 
     @Throws(InterruptedException::class)
-    fun getAvgXRed(): Double {
+    fun getAvgX(): Double {
         val bitmap = getImage()
-        val xValues = ArrayList<Int>()
-        //x : 800
-        //y : 448
+        val yValues = ArrayList<Int>()
 
 
 
+        for (rowNum in 0..bitmap.height) {
 
-        //counters for whether a pixel is gold, otherwise assign it to black
-        var black = 0
-        var gold = 0
-        val left: Int = (25 * .625).toInt()
-        val right: Int = (730 * .625).toInt()
-        val bottom: Int = (100 * .625).toInt()
-        val top: Int = (10 * .625).toInt()
-        //col range 145..830
-        //row range 110..320
-        for (colNum in left..right) {
-
-            // scan rows 120-240 to block out cubes from crater
-            //NEED TO TEST WHICH ROWS TO LOOP THROUGH TO GET MOST EFFICIENT RESULT
-            for (rowNum in top..bottom) {
+            for (colNum in 200..600) {
                 val pixel = bitmap.getPixel(colNum, rowNum)
 
                 // receive R, G, and B values for each pixel
@@ -175,162 +145,23 @@ class NewBitMap constructor(val opMode: OpMode) {
                 val bluePixel = blue(pixel)
 
                 //checking if the pixel meets the thresholds to be assigned a gold value
-                if (redPixel <= 25 && greenPixel <= 25 && bluePixel <= 25) {
-                    black++
-                    xValues.add(colNum)
+                if (redPixel >= RED_THRESHOLD && greenPixel >= GREEN_THRESHOLD && bluePixel <= BLUE_THRESHOLD) {
+
+                    yValues.add(colNum)
                 }
             }
 
         }
 
-        var avgX = 0.0
-        for (x in xValues) {
-            avgX += x
-        }
-//
-        avgX /= xValues.size
-
-
-        //assigning a boolean that determines whether or not the specific frame is black
-        //if there are more black pixels, it is black, otherwise it's gold
-        //BLACK IS TRUE, GOLD IS FALSE
-
-
-
-
-        return avgX
-    }
-
-
-    @Throws(InterruptedException::class)
-    fun redVision(): String {
-        val bitmap = getImage()
-        val xValues = ArrayList<Int>()
-        //x : 800
-        //y : 448
-
-
-
-
-        //counters for whether a pixel is gold, otherwise assign it to black
-        var black = 0
-        var gold = 0
-        val left: Int = (25 * .625).toInt()
-        val right: Int = (730 * .625).toInt()
-        val bottom: Int = (100 * .625).toInt()
-        val top: Int = (10 * .625).toInt()
-        //col range 145..830
-        //row range 110..320
-        for (colNum in left..right) {
-
-            // scan rows 120-240 to block out cubes from crater
-            //NEED TO TEST WHICH ROWS TO LOOP THROUGH TO GET MOST EFFICIENT RESULT
-            for (rowNum in top..bottom) {
-                val pixel = bitmap.getPixel(colNum, rowNum)
-
-                // receive R, G, and B values for each pixel
-                val redPixel = red(pixel)
-                val greenPixel = green(pixel)
-                val bluePixel = blue(pixel)
-
-                //checking if the pixel meets the thresholds to be assigned a gold value
-                if (redPixel <= 25 && greenPixel <= 25 && bluePixel <= 25) {
-                    black++
-                    xValues.add(colNum)
-                }
-            }
-
+        var avgY = 0.0
+        for (y in yValues) {
+            avgY += y
         }
 
-        var avgX = 0.0
-        for (x in xValues) {
-            avgX += x
-        }
-//
-        avgX /= xValues.size
-
-
-        //assigning a boolean that determines whether or not the specific frame is black
-        //if there are more black pixels, it is black, otherwise it's gold
-        //BLACK IS TRUE, GOLD IS FALSE
-
-
-        if (avgX <= 100){
-            return "L"
-        } else if (avgX > 100 && avgX <= 350){
-            return  "C"
-        } else if (avgX > 350){
-            return "R"
-        }
-        return "C"
-
-//        return avgX
-    }
-
-    @Throws(InterruptedException::class)
-    fun getAvgXBlue(): Double {
-        val bitmap = getImage()
-        val xValues = ArrayList<Int>()
-        //x : 800
-        //y : 448
-
-
-
-
-        //counters for whether a pixel is gold, otherwise assign it to black
-        var black = 0
-        var gold = 0
-        val left: Int = (200 * .625).toInt()
-        val right: Int = (900 * .625).toInt()
-        val bottom: Int = (110 * .625).toInt()
-        val top: Int = (0 * .625).toInt()
-        //col range 145..830
-        //row range 110..320
-        for (colNum in left..right) {
-
-            // scan rows 120-240 to block out cubes from crater
-            //NEED TO TEST WHICH ROWS TO LOOP THROUGH TO GET MOST EFFICIENT RESULT
-            for (rowNum in top..bottom) {
-                val pixel = bitmap.getPixel(colNum, rowNum)
-
-                // receive R, G, and B values for each pixel
-                val redPixel = red(pixel)
-                val greenPixel = green(pixel)
-                val bluePixel = blue(pixel)
-
-                //checking if the pixel meets the thresholds to be assigned a gold value
-                if (redPixel <= 25 && greenPixel <= 25 && bluePixel <= 25) {
-                    black++
-                    xValues.add(colNum)
-                }
-            }
-
-        }
-
-        var avgX = 0.0
-        for (x in xValues) {
-            avgX += x
-        }
-//
-        avgX /= xValues.size
-
-
-        //assigning a boolean that determines whether or not the specific frame is black
-        //if there are more black pixels, it is black, otherwise it's gold
-        //BLACK IS TRUE, GOLD IS FALSE
-
-
-
-
-        return avgX
+        return avgY
     }
 
 
 
-
-
-    fun vufConvertToBitmap(frame: Frame): Bitmap? {
-        return vuforia.convertFrameToBitmap(frame)
-    }
 
 }

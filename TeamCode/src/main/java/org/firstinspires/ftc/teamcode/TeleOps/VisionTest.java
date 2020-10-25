@@ -15,8 +15,8 @@ public class VisionTest extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
 
-            telemetry.addData("S pose", n.getAvgXBlue());
-            telemetry.addData("Block Pose: ", n.blueVision());
+            telemetry.addData("S pose", n.getAvgX());
+            telemetry.addData("Block Pose: ", n.vision());
             telemetry.update();
         }
     }

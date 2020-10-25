@@ -13,15 +13,8 @@ class Transition constructor(op : OpMode) {
     lateinit var transition : ExpansionHubMotor
 
     init {
-       
         transition = op.hardwareMap.get(ExpansionHubMotor::class.java, "transition")
-
     }
-
-
-
-
-
 
     fun power (power: Float){
 
